@@ -27,16 +27,12 @@ mongoose
     console.log(err);
   });
 
+require("chromedriver");
 const { Builder, By } = require("selenium-webdriver");
-const chrome = require("selenium-webdriver/chrome");
-const service = new chrome.ServiceBuilder(
-  "c:/path/to/chromedriver/chromedriver.exe"
-);
 
 async function fetchDict() {
   let driver = new Builder()
     .forBrowser("chrome")
-    .setChromeService(service)
     .build();
 
   try {
