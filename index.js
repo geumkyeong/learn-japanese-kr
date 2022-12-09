@@ -15,12 +15,67 @@ app.use(express.static(path.join(__dirname, "build")));
 
 mongoose
   .connect(config.mongoURI)
-  .then(() => {
-    console.log("MongoDB is Connected!");
+  .then(async () => {
+    const result = await fetchDict();
+
+    Dictionary.insertMany(result, (err, results) => {
+      if (err) console.log(err);
+      console.log(results);
+    });
   })
   .catch((err) => {
     console.log(err);
   });
+
+const { Builder, By } = require("selenium-webdriver");
+const chrome = require("selenium-webdriver/chrome");
+const service = new chrome.ServiceBuilder(
+  "c:/path/to/chromedriver/chromedriver.exe"
+);
+
+async function fetchDict() {
+  let driver = new Builder()
+    .forBrowser("chrome")
+    .setChromeService(service)
+    .build();
+
+  try {
+    // wait for scarping
+    await driver.manage().setTimeouts({ implicit: 10000 });
+
+    await driver.get(
+      "https://ja.dict.naver.com/#/jlpt/list?level=5&part=allClass&page=1"
+    );
+
+    let list = driver.findElement(By.id("my_jlpt_list_template"));
+    let rows = await list.findElements(By.tagName("li"));
+
+    let dictionary = [];
+
+    for (let r of rows) {
+      let data = await r.getText();
+      let row = data.split("\n");
+
+      if (row.length > 1) {
+        dictionary.push({
+          title: row[0],
+          description: row[2],
+        });
+      }
+    }
+
+    // only accapted exist data.
+    const result = dictionary.filter((data) => data !== undefined);
+
+    return result;
+  } finally {
+    await driver.quit();
+  }
+}
+
+app.get("/api/dictionary", (req, res) => {
+  
+});
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"), (err) => {
