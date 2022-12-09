@@ -9,7 +9,7 @@
   "scripts": {
     "client-build": "cd client && npm ci && npm run build && cd ../",
     "server-build": "npm ci --include=dev",
-    "vercel-build": "npm run client-build && npm run server-build && move ./client/build ./build",
+    "vercel-prebuild": "npm run client-build && npm run server-build && move ./client/build ./build",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

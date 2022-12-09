@@ -40,9 +40,6 @@ async function fetchDict() {
     .build();
 
   try {
-    // wait for scarping
-    await driver.manage().setTimeouts({ implicit: 10000 });
-
     await driver.get(
       "https://ja.dict.naver.com/#/jlpt/list?level=5&part=allClass&page=1"
     );
@@ -64,6 +61,9 @@ async function fetchDict() {
       }
     }
 
+    // wait for scarping
+    await driver.manage().setTimeouts({ implicit: 10000 });
+
     // only accapted exist data.
     const result = dictionary.filter((data) => data !== undefined);
 
@@ -73,11 +73,9 @@ async function fetchDict() {
   }
 }
 
-app.get("/api/dictionary", (req, res) => {
-  
-});
+app.get("/api/dictionary", (req, res) => {});
 
-app.get("/", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"), (err) => {
     if (err) {
       res.status("500").send(err);

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -10,12 +9,6 @@ function App() {
   });
 
   const { title, description } = word;
-
-  useEffect(() => {
-    getDictionaryData();
-  }, []);
-
-  const getDictionaryData = () => {};
 
   return (
     <div className="container">
