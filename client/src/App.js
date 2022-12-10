@@ -17,7 +17,7 @@ function App() {
 
   const getDictionaryData = () => {
     axios
-      .get("http://localhost:5000/api/dictionary")
+      .get("/api/dictionary")
       .then((res) => {
         let dictionary = res.data.data;
         dictionary.map((word) =>
@@ -36,12 +36,17 @@ function App() {
   };
 
   const getRandomWord = () => {
-    let index = Math.floor(Math.random() * words.length);
+    let randomIndex = Math.floor(Math.random() * words.length);
+    let item = words[randomIndex];
 
-    setWord({
-      title: words[index].title,
-      description: words[index].description,
-    });
+    setWord(item);
+  };
+
+  const speechWord = () => {
+    let pronounce = title.split(" ");
+    let utterance = new SpeechSynthesisUtterance(pronounce[0]);
+    utterance.lang = "ja-JP";
+    speechSynthesis.speak(utterance);
   };
 
   return (
@@ -57,10 +62,10 @@ function App() {
         </div>
       </div>
       <div className="actions">
-        <button id="speechBtn">
+        <button id="speechBtn" onClick={speechWord}>
           <i className="material-symbols-rounded">volume_up</i>
         </button>
-        <button id="randomBtn" onClick={getRandomWord}>
+        <button id="rotateBtn" onClick={getRandomWord}>
           <i className="material-symbols-rounded">change_circle</i>
         </button>
       </div>
