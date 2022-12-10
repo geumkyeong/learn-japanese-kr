@@ -18,6 +18,11 @@ mongoose
   .then(async () => {
     const result = await fetchDict();
 
+    Dictionary.deleteMany({}, (err) => {
+      if (err) console.log(err);
+      console.log("Initialize Dictionary data");
+    });
+
     Dictionary.insertMany(result, (err, results) => {
       if (err) console.log(err);
       console.log(results);
@@ -31,9 +36,7 @@ require("chromedriver");
 const { Builder, By } = require("selenium-webdriver");
 
 async function fetchDict() {
-  let driver = new Builder()
-    .forBrowser("chrome")
-    .build();
+  let driver = new Builder().forBrowser("chrome").build();
 
   try {
     await driver.get(
@@ -58,7 +61,7 @@ async function fetchDict() {
     }
 
     // wait for scarping
-    await driver.manage().setTimeouts({ implicit: 10000 });
+    // await driver.manage().setTimeouts({ implicit: 10000 });
 
     // only accapted exist data.
     const result = dictionary.filter((data) => data !== undefined);
@@ -69,12 +72,17 @@ async function fetchDict() {
   }
 }
 
-app.get("/api/dictionary", (req, res) => {});
+app.get("/api/dictionary", (req, res) => {
+  Dictionary.find({}, (err, results) => {
+    if (err) return res.status(500).json({ success: false, err });
+    return res.status(200).json({ success: true, data: results });
+  });
+});
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"), (err) => {
     if (err) {
-      res.status("500").send(err);
+      res.status(500).send(err);
     }
   });
 });
