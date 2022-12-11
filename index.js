@@ -13,29 +13,55 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "build")));
 
-mongoose
-  .connect(config.mongoURI)
-  .then(async () => {
-    const result = await fetchDict();
+async function run() {
+  await mongoose
+    .connect(config.mongoURI)
+    .then(async () => {
+      const result = await fetchDict();
 
-    Dictionary.deleteMany({}, (err) => {
-      if (err) console.log(err);
-      console.log("Initialize Dictionary data");
-    });
+      Dictionary.deleteMany({}, (err) => {
+        if (err) console.log(err);
+        console.log("Initialize Dictionary data");
+      });
 
-    Dictionary.insertMany(result, (err, results) => {
-      if (err) console.log(err);
+      Dictionary.insertMany(result, (err, results) => {
+        if (err) console.log(err);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+}
+
+run();
 
 require("chromedriver");
 const { Builder, By } = require("selenium-webdriver");
+let chrome = require("selenium-webdriver/chrome");
+let proxy = require("selenium-webdriver/proxy");
+let options = new chrome.Options();
 
 async function fetchDict() {
-  let driver = new Builder().forBrowser("chrome").build();
+  let host =
+    Math.floor(Math.random() * 255) +
+    1 +
+    "." +
+    Math.floor(Math.random() * 255) +
+    "." +
+    Math.floor(Math.random() * 255) +
+    "." +
+    Math.floor(Math.random() * 255);
+
+  let port = Math.floor(Math.random() * 1023);
+  console.log("ip address : ", host, ":", port);
+
+  options.setProxy(proxy.manual({ http: `<${host}:${port}>` }));
+
+  options.addArguments(
+    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+  );
+
+  let driver = await new Builder().forBrowser("chrome").build();
 
   try {
     await driver.get(
@@ -58,9 +84,6 @@ async function fetchDict() {
         });
       }
     }
-
-    // wait for scarping
-    // await driver.manage().setTimeouts({ implicit: 10000 });
 
     // only accapted exist data.
     const result = dictionary.filter((data) => data !== undefined);

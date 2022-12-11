@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 
+const synth = window.speechSynthesis;
+
 function App() {
   const [words, setWords] = useState([]);
   const [word, setWord] = useState({
@@ -15,8 +17,8 @@ function App() {
     getDictionaryData();
   }, []);
 
-  const getDictionaryData = () => {
-    axios
+  const getDictionaryData = async () => {
+    await axios
       .get("/api/dictionary")
       .then((res) => {
         let dictionary = res.data.data;
@@ -46,7 +48,7 @@ function App() {
     let pronounce = title.split(" ");
     let utterance = new SpeechSynthesisUtterance(pronounce[0]);
     utterance.lang = "ja-JP";
-    speechSynthesis.speak(utterance);
+    synth.speak(utterance);
   };
 
   return (
