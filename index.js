@@ -50,39 +50,45 @@ async function fetchDict() {
     "." +
     Math.floor(Math.random() * 255) +
     "." +
-    Math.floor(Math.random() * 255);
+    Math.floor(Math.random() * 255) +
+    ":" +
+    Math.floor(Math.random() * 1023);
 
-  let port = Math.floor(Math.random() * 1023);
-  console.log("ip address : ", host, ":", port);
-
-  options.setProxy(proxy.manual({ http: `<${host}:${port}>` }));
+  options.setProxy(proxy.manual({ http: `<${host}>` }));
 
   options.addArguments(
     "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
   );
 
-  let driver = await new Builder().forBrowser("chrome").build();
+  let driver = await new Builder()
+    .forBrowser("chrome")
+    .setChromeOptions(options)
+    .build();
 
   try {
-    await driver.get(
-      "https://ja.dict.naver.com/#/jlpt/list?level=5&part=allClass&page=1"
-    );
-
-    let list = driver.findElement(By.id("my_jlpt_list_template"));
-    let rows = await list.findElements(By.tagName("li"));
+    let url =
+      "https://ja.dict.naver.com/#/jlpt/list?level=5&part=allClass&page=";
 
     let dictionary = [];
+    for (let i = 1; i < 20; i++) {
+      await driver.get(url + i);
 
-    for (let r of rows) {
-      let data = await r.getText();
-      let row = data.split("\n");
+      let list = driver.findElement(By.id("my_jlpt_list_template"));
+      let rows = await list.findElements(By.tagName("li"));
 
-      if (row.length > 1) {
-        dictionary.push({
-          title: row[0],
-          description: row[2],
-        });
+      for (let r of rows) {
+        let data = await r.getText();
+        let row = data.split("\n");
+
+        if (row.length > 1) {
+          dictionary.push({
+            title: row[0],
+            description: row[2],
+          });
+        }
       }
+      // wait for scraping
+      await driver.manage().setTimeouts({ implicit: 200 });
     }
 
     // only accapted exist data.
