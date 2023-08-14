@@ -1,10 +1,8 @@
-require('chromedriver');
+// require("chromedriver");
 let { By, Builder } = require("selenium-webdriver");
 let chrome = require("selenium-webdriver/chrome");
 let proxy = require("selenium-webdriver/proxy");
-let service = new chrome.ServiceBuilder(
-  "C:/path/to/chromedriver/chromedriver.exe"
-);
+// let service = new chrome.ServiceBuilder("C:/path/to/chromedriver/chromedriver.exe");
 let opts = new chrome.Options();
 
 const fetchDict = async () => {
@@ -20,15 +18,18 @@ const fetchDict = async () => {
     ":" +
     Math.floor(Math.random() * 1023);
 
-  opts.setProxy(proxy.manual({ http: `<${host}>` }));
+  opts.setChromeBinaryPath("C:/path/to/chromedriver/chromedriver.exe");
 
+  opts.setProxy(proxy.manual({ http: `<${host}>` }));
   opts.addArguments(
     "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
   );
 
+  opts.addArguments("--headless");
+
   let driver = await new Builder()
     .forBrowser("chrome")
-    .setChromeService(service)
+    // .setChromeService(service)
     .setChromeOptions(opts)
     .build();
 

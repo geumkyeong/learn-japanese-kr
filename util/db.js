@@ -8,8 +8,8 @@ const connectDB = async () => {
     const conn = await mongoose.connect(config.mongoURI);
     console.log(`Mongo db connected: ${conn.connection.host}`);
     
-    // const result = await fetchDict();
-    // console.log(result)
+    const result = await fetchDict();
+    console.log(result)
 
     /* Dictionary.deleteMany({}, (err) => {
       if (err) console.log(err);
