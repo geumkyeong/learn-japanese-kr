@@ -1,0 +1,98 @@
+main {
+  height: calc(100vh - 7rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 3rem;
+}
+
+.flipCard {
+  background-color: transparent;
+  perspective: 1000px;
+  margin-bottom: 0.75rem;
+}
+
+.flipCardInner {
+  position: relative;
+  width: 26rem;
+  height: 15rem;
+  transition: transform 0.3s ease-in-out;
+  transform-style: preserve-3d;
+}
+
+.flipCard:hover .flipCardInner {
+  transform: rotateY(180deg);
+}
+
+.flipCardFront,
+.flipCardBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.flipCardFront {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #111;
+  background-color: #faf9f6;
+}
+
+.flipCardFront div {
+  color: #555;
+}
+
+.flipCardBack {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-direction: row;
+  color: #faf9f6;
+  font-size: 1rem;
+  text-align: left;
+  background-color: #2196f3;
+  transform: rotateY(180deg);
+}
+
+div.description div,
+div.description span {
+  width: 100%;
+  margin-left: 2.75rem;
+}
+
+div.description span {
+  display: inline-block;
+  color: #696969;
+  font-size: 0.93rem;
+  margin-bottom: 0.4rem;
+}
+
+div.description div {
+  padding-bottom: 0.15rem;
+}
+
+.actions button {
+  color: #faf9f6;
+  margin: 0 0.5rem;
+}
+
+.actions i {
+  font-size: 1.75rem;
+  margin-left: -1.75px;
+}
+
+.actions .speechBtn {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #faf9f6;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+  background-color: #2196f3;
+}
