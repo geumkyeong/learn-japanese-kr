@@ -1,3 +1,4 @@
+require('chromedriver');
 let { By, Builder } = require("selenium-webdriver");
 let chrome = require("selenium-webdriver/chrome");
 let proxy = require("selenium-webdriver/proxy");
