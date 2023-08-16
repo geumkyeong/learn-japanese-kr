@@ -1,37 +1,35 @@
-// require("chromedriver").path
-// CHROME_PATH = "C:/path/to/chromedriver/chromedriver.exe";
-let { By, Builder } = require("selenium-webdriver");
+require("chromedriver");
+const { Builder, By } = require("selenium-webdriver");
 let chrome = require("selenium-webdriver/chrome");
 let proxy = require("selenium-webdriver/proxy");
-let service = new chrome.ServiceBuilder("C:/path/to/chromedriver/chromedriver.exe");
+let service = new chrome.ServiceBuilder(
+  "C:/path/to/chromedriver/chromedriver.exe"
+);
+let options = new chrome.Options();
 
-let opts = new chrome.Options();
+let host =
+  Math.floor(Math.random() * 255) +
+  "." +
+  Math.floor(Math.random() * 255) +
+  "." +
+  Math.floor(Math.random() * 255) +
+  "." +
+  Math.floor(Math.random() * 255) +
+  ":" +
+  Math.floor(Math.random() * 1023);
+
+options.setProxy(proxy.manual({ http: `<${host}>` }));
+
+options.addArguments(
+  "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+);
 
 const fetchDict = async () => {
-  let host =
-    Math.floor(Math.random() * 255) +
-    "." +
-    Math.floor(Math.random() * 255) +
-    "." +
-    Math.floor(Math.random() * 255) +
-    "." +
-    Math.floor(Math.random() * 255) +
-    ":" +
-    Math.floor(Math.random() * 1023);
-
-  opts.setProxy(proxy.manual({ http: `<${host}>` }));
-  opts.addArguments(
-    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
-  );
-
-  opts.addArguments("headless");
-
   let driver = await new Builder()
     .forBrowser("chrome")
     .setChromeService(service)
-    .setChromeOptions(opts)
+    .setChromeOptions(options)
     .build();
-
   try {
     await driver.get(
       "https://ja.dict.naver.com/#/jlpt/list?level=5&part=allClass&page=" + 1
