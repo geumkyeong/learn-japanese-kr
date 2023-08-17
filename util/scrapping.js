@@ -1,18 +1,18 @@
 const { Builder, By } = require("selenium-webdriver");
 let chrome = require("selenium-webdriver/chrome");
 let options = new chrome.Options();
-let service = new chrome.ServiceBuilder(
-  "C:/path/to/chromedriver/chromedriver.exe"
-);
-
-options.addArguments(
-  "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
-);
+let service = new chrome.ServiceBuilder();
+// "C:/path/to/chromedriver/chromedriver.exe"
+options.setChromeBinaryPath(require("chromedriver").path);
+options.headless();
 
 const fetchDict = async () => {
+  /* options.addArguments(
+    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+  );
+ */
   let driver = await new Builder()
     .forBrowser("chrome")
-    .setChromeService(service)
     .setChromeOptions(options)
     .build();
 

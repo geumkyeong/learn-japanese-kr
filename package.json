@@ -27,7 +27,7 @@
     "selenium-webdriver": "^4.11.1"
   },
   "devDependencies": {
-    "chromedriver": "^115.0.1",
+    "chromedriver": "^116.0.0",
     "nodemon": "^2.0.20"
   }
 }
