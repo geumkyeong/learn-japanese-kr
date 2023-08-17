@@ -1,9 +1,8 @@
-const path = require("path");
 const { Builder, By } = require("selenium-webdriver");
 let chrome = require("selenium-webdriver/chrome");
 let options = new chrome.Options();
 let service = new chrome.ServiceBuilder(
-  path.join(__dirname, "chromedriver.exe")
+  "C:/path/to/chromedriver/chromedriver.exe"
 );
 
 options.addArguments(
